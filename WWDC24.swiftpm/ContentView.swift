@@ -12,8 +12,8 @@ struct ContentView: View {
     @State private var correct: String = "green"
     @State private var wrong: String = "red"
     
-    @State private var initialBlueDicesQt = 4
-    @State private var initialRedDicesQt = 4
+    @State private var initialBlueDicesQt = 5
+    @State private var initialRedDicesQt = 6
     @State private var initialNumeratorQt  = 0
     @State private var initialDenominatorQt = 0
 
@@ -37,7 +37,7 @@ struct ContentView: View {
         Text("\(Text("Let's say that we want to calculate the probability of").foregroundColor(.white)) \(Text("numbers greater than 2").foregroundColor(Color(hex: "0094FF"))) \(Text("in a dice of").foregroundColor(.white)) \(Text("4 sizes").foregroundColor(Color(hex: "F03131")))")
 
     ],[
-        Text("\(Text("If you hold the dice we can drag and drop it!\n Put all the").foregroundColor(.white)) \(Text("red dices").foregroundColor(Color(hex: "F03131"))) \(Text("that represent").foregroundColor(.white)) \(Text("all the possibilities").foregroundColor(Color(hex: "F03131"))) \(Text("in a dice of").foregroundColor(.white)) \(Text("4 sizes").foregroundColor(Color(hex: "F03131"))) \(Text("in the").foregroundColor(.white)) \(Text("red box!\n").foregroundColor(Color(hex: "F03131"))) \(Text("In this case the numbers").foregroundColor(.white)) \(Text("1, 2, 3, 4").foregroundColor(Color(hex: "F03131")))")
+        Text("\(Text("Touch the").foregroundColor(.white)) \(Text("red dices").foregroundColor(Color(hex: "F03131"))) \(Text("that represent").foregroundColor(.white)) \(Text("all the possibilities").foregroundColor(Color(hex: "F03131"))) \(Text("in a dice of").foregroundColor(.white)) \(Text("4 sizes").foregroundColor(Color(hex: "F03131"))) \(Text("in the").foregroundColor(.white)) \(Text("red box!").foregroundColor(Color(hex: "F03131"))) \(Text("In this case the numbers").foregroundColor(.white)) \(Text("1, 2, 3, 4").foregroundColor(Color(hex: "F03131")))")
     ],[
         Text("\(Text("Well done! Now since we want numbers greater than 2, lets use the").foregroundColor(.white)) \(Text("blue dices").foregroundColor(Color(hex: "0094FF"))) \(Text("that represent it inside the").foregroundColor(.white)) \(Text("blue box").foregroundColor(Color(hex: "0094FF"))) \(Text("in this case we should use").foregroundColor(.white)) \(Text("3 and 4").foregroundColor(Color(hex: "0094FF")))")
     ], [
@@ -59,105 +59,55 @@ struct ContentView: View {
                 .frame(width: 1135, height: 500)
                 .padding(.bottom, 200)
             VStack {
-                
                 HStack(spacing: 20) {
-                    DiceBoardView(tasks: BlueDices, backgroundColor: .blue)
-                        .padding(.leading, 70)
-                    DiceBoardView(tasks: RedDices, backgroundColor: .red)
-                    VStack() {
-                        if auxIndex < 3 {
-                            BoardView(title: "Numerator", tasks: Numerator, backgroundColor: .blue)
-                            BoardView(title: "Denominator", tasks: Denominator, backgroundColor: .red)
-                        } else {
-                            BoardView(title: "Numerator", tasks: Numerator, backgroundColor: .blue)
-                            
-                                .dropDestination(for: String.self) {
-                                    droppedDice,  location in
-                                    print(droppedDice)
-                                    
-                                    if auxIndex == 3 {
-                                        return false
-                                    }
-                                    
-                                    // Its not possible to use a red dice in a blue section
-                                    if droppedDice[0].contains("red"){
-                                        return false
-                                    }
-                                    
-                                    // its not possible to drop the same dice in the same section
-                                    for i in 0..<Numerator.count {
-                                        if Numerator[i].imageName == droppedDice[0] {
-                                            return false
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .frame(maxWidth: 70, maxHeight: 450)
+                            .foregroundColor(auxIndex < 3 ? Color.blue.opacity(0.5) : .blue)
+                        VStack {
+                            ForEach(BlueDices, id: \.self){ dice in
+                                Image(dice.imageName)
+                                    .opacity(auxIndex < 4 ? 0.5 : 1.0)
+                                    .onTapGesture {
+                                        checkIfIsCorrect()
+                                        withAnimation(Animation.spring(duration: 0.5)) {
+                                            moveDice(from: dice, source: &BlueDices, destination: &Numerator)
                                         }
+                                        checkIfIsCorrect()
                                     }
-                                    
-                                    
-                                    // Setup dice
-                                    let firstDigit = Int(String(droppedDice[0].first!))
-                                    
-                                    if !finalNumeratorArray.contains(firstDigit!) {
-                                        return false
-                                    }
-                                    
-                                    let team = "blue"
-                                    Numerator.append(Dice(image: [Image(droppedDice[0])], imageName: droppedDice[0], value: firstDigit!, team: team))
-                                    
-                                    // Find dice in blue, update the numerator stats and remove it
-                                    for i in 0..<BlueDices.count {
-                                        if BlueDices[i].imageName == droppedDice[0] {
-                                            actualNumeratorArray.append(BlueDices[i].value)
-                                            actualNumeratorArray.sort()
-                                            BlueDices.remove(at: i)
-                                            break
-                                        }
-                                    }
-                                    checkIfIsCorrect()
-                                    
-                                    return true
-                                }
-                            
-                            
-                            BoardView(title: "Denominator", tasks: Denominator, backgroundColor: .red)
-                                .dropDestination(for: String.self) {
-                                    droppedDice,  location in
-                                    print(droppedDice)
-                                    
-                                    // Its not possible to use a blue dice in a red section
-                                    if droppedDice[0].contains("blue") {
-                                        return false
-                                    }
-                                    
-                                    // its not possible to drop the same dice in the same section
-                                    for i in 0..<Denominator.count {
-                                        if Denominator[i].imageName == droppedDice[0] {
-                                            return false
-                                        }
-                                    }
-                                    
-                                    // Setup dice
-                                    let firstDigit = Int(String(droppedDice[0].first!))
-                                    
-                                    if !finalDenominatorArray.contains(firstDigit!) {
-                                        return false
-                                    }
-                                    
-                                    let team = "red"
-                                    Denominator.append(Dice(image: [Image(droppedDice[0])], imageName: droppedDice[0], value: firstDigit!, team: team))
-                                    
-                                    // Find dice in red, update the numerator stats and remove it
-                                    for i in 0..<RedDices.count {
-                                        if RedDices[i].imageName == droppedDice[0] {
-                                            actualDenominatorArray.append(RedDices[i].value)
-                                            actualDenominatorArray.sort()
-                                            RedDices.remove(at: i)
-                                            break
-                                        }
-                                    }
-                                    checkIfIsCorrect()
-
-                                    return true
-                                }
+                                    .disabled(auxIndex < 4)
+                            }
                         }
+                        
+                    }
+                    .padding(.leading, 70)
+                    ZStack {
+                        
+                        RoundedRectangle(cornerRadius: 12)
+                            .frame(maxWidth: 70, maxHeight: 450)
+                            .foregroundColor(auxIndex < 3 ? Color.red.opacity(0.5) : .red)
+                        VStack {
+                            ForEach(RedDices, id: \.self){ dice in
+                                Image(dice.imageName)
+                                    .opacity(auxIndex < 3 ? 0.5 : 1.0)
+                                    .onTapGesture {
+                                        withAnimation(Animation.spring(duration: 0.5)) {
+                                            moveDice(from: dice, source: &RedDices, destination: &Denominator)
+                                            
+                                        }
+                                        checkIfIsCorrect()
+                                    }
+                                    .disabled(auxIndex < 3)
+                            }
+                        }
+                    
+                    }                    //DiceBoardView(tasks: RedDices, backgroundColor: .red)
+                    VStack() {
+
+                        BoardView(title: "Numerator", tasks: Numerator, backgroundColor: .blue)
+                            .opacity(auxIndex < 4 ? 0.5 : 1.0)
+                        BoardView(title: "Denominator", tasks: Denominator, backgroundColor: .red)
+                            .opacity(auxIndex < 3 ? 0.5 : 1.0)
                         
                     }
                     VStack {
@@ -170,26 +120,23 @@ struct ContentView: View {
                                 } else {
                                     Image(systemName: "xmark")
                                         .foregroundColor(.red)
+                                        .opacity(auxIndex < 4 ? 0.5 : 1.0)
                                 }
                                 Image("\(Numerator.count)blue")
+                                    .opacity(auxIndex < 4 ? 0.5 : 1.0)
                                 Image("linedivisor")
                                     .resizable()
                                     .frame(width: 129, height: 2)
                                 Image("\(Denominator.count)red")
+                                    .opacity(auxIndex < 3 ? 0.5 : 1.0)
                                 if actualDenominatorArray == finalDenominatorArray {
                                     Image(systemName: "checkmark")
                                         .foregroundColor(.green)
                                 } else {
                                     Image(systemName: "xmark")
                                         .foregroundColor(.red)
+                                        .opacity(auxIndex < 3 ? 0.5 : 1.0)
                                 }
-                            //    Text("numeratorState")
-//                                    .foregroundColor(actualNumeratorArray == finalNumeratorArray ? .green : .red)
-//                                Text("Numerator: \(Numerator.count)")
-//                                Text("Denominator: \(Denominator.count)")
-//        //                        Spacer().frame(height: 50)
-//                                Text("denominatorState")
-//                                    .foregroundColor(actualDenominatorArray == finalDenominatorArray ? .green : .red)
                             }
                             .padding(.trailing)
                             .padding(.trailing)
@@ -251,6 +198,46 @@ struct ContentView: View {
             .padding()
         }
     }
+    
+    func moveDice(from dice: Dice, source: inout [Dice], destination: inout [Dice]) {
+        if let index = source.firstIndex(of: dice) {
+            let removedDice = source[index]
+            let value = removedDice.value
+            
+            var isAllowedToMove = false
+            
+            // Se for azul, verifique se o valor existe no numerador
+            if removedDice.imageName.contains("blue") {
+                if finalNumeratorArray.contains(value) {
+                    isAllowedToMove = true
+                }
+            }
+            // Se for vermelho, verifique se o valor existe no final do denominador
+            else {
+                if finalDenominatorArray.contains(value) {
+                    isAllowedToMove = true
+                }
+            }
+            
+            // Se permitido mover, execute a animação e a lógica de movimento
+            if isAllowedToMove {
+                withAnimation(Animation.spring(duration: 0.5)) {
+                    source.remove(at: index)
+                    
+                    if removedDice.imageName.contains("blue") {
+                        actualNumeratorArray.append(value)
+                        actualNumeratorArray.sort()
+                    } else {
+                        actualDenominatorArray.append(value)
+                        actualDenominatorArray.sort()
+                    }
+                    
+                    destination.append(removedDice)
+                }
+            }
+        }
+    }
+
     
     func sumIndex() {
         self.auxIndex += 1

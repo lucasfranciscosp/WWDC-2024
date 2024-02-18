@@ -18,20 +18,17 @@ struct DiceBoardView: View {
                     .frame(maxWidth: 70, maxHeight: 450)
                     .foregroundColor(backgroundColor) // Usando a cor de fundo especificada
                     
-                ScrollView {
                     VStack(spacing: 6) {
                         ForEach(tasks, id: \.self) { task in
                             Image(task.imageName)
                                 .frame(minWidth: 20, minHeight: 20)
                                 .scaleEffect(0.80)
                                 .foregroundStyle(.white)
-                                .draggable(task.imageName)
-                                .highPriorityGesture(DragGesture())
+                                // .draggable(task.imageName)
+                                //.highPriorityGesture(DragGesture())
                                 
                         }
                     }
-                    
-                }
                 .padding(.vertical)
                 
                 Spacer()
