@@ -16,7 +16,6 @@ struct ContentView: View {
     @State private var initialRedDicesQt = 6
     @State private var initialNumeratorQt  = 0
     @State private var initialDenominatorQt = 0
-
     
     @State private var finalNumerator = 2
     @State private var finalDenominator = 4

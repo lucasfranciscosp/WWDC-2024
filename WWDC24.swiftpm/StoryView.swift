@@ -11,6 +11,9 @@ struct StoryView: View {
     
     @State var index: Int = 1
     @State private var showTutorial: Bool = false
+    @State private var showGameplay1: Bool = false
+    @State private var showGameplay2: Bool = false
+    @State private var showGameplay3: Bool = false
     
     var body: some View {
         ZStack {
@@ -28,7 +31,25 @@ struct StoryView: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                             self.index += 1
                         }
-                    } else {
+                    } else if self.index == 11 {
+                        self.showGameplay1.toggle()
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            self.index += 1
+                        }
+                    } else if self.index == 13 {
+                        self.showGameplay2.toggle()
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            self.index += 1
+                        }
+                    } else if self.index == 1 {   // 13
+                        self.showGameplay3.toggle()
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            self.index += 1
+                        }
+                    }  else {
                         self.index += 1
                     }
                 }
@@ -37,7 +58,20 @@ struct StoryView: View {
         
         .fullScreenCover(isPresented: $showTutorial) {
             ContentView(showContent: $showTutorial)
+                //.background(TransparentBackground())
         }
+        .fullScreenCover(isPresented: $showGameplay1) {
+            Gameplay1(showContent: $showGameplay1)
+        }
+        .fullScreenCover(isPresented: $showGameplay2) {
+            Gameplay2(showContent: $showGameplay2)
+        }
+        .fullScreenCover(isPresented: $showGameplay3) {
+            Gameplay3(showContent: $showGameplay3)
+        }
+        .transaction({ transaction in
+            transaction.disablesAnimations = true
+        })
     }
 }
 
