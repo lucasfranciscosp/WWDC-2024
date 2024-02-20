@@ -57,7 +57,7 @@ struct Gameplay3: View {
                             ForEach(BlueDices, id: \.self){ dice in
                                 Image(dice.imageName)
                                     .onTapGesture {
-                                        checkIfIsCorrect()
+                                        //checkIfIsCorrect()
                                         withAnimation(Animation.spring(duration: 0.5)) {
                                             moveDice(from: dice, source: &BlueDices, destination: &Numerator)
                                         }
@@ -179,7 +179,7 @@ struct Gameplay3: View {
                             .offset(x: -400)
                     
                         HStack {
-                            ForEach(Array(textsWithColors[auxIndex].enumerated()), id: \.offset) { index, text in
+                            ForEach(Array(textsWithColors[auxIndex % textsWithColors.count].enumerated()), id: \.offset) { index, text in
                                 text
                                     .font(.custom("Breathe Fire III", size: 36))
                             }
@@ -262,7 +262,7 @@ struct Gameplay3: View {
             
     func checkIfIsCorrect() {
         if actualNumeratorArray == finalNumeratorArray && actualDenominatorArray == finalDenominatorArray {
-            self.auxIndex += 1
+            self.auxIndex = textsWithColors.count - 1
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 showAnimationWarrior = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {

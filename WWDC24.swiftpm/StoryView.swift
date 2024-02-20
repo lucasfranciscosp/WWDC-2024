@@ -25,13 +25,13 @@ struct StoryView: View {
                 .padding(.leading)
                 .padding(.top, 600)
                 .onTapGesture {
-                    if self.index == 9 {
+                    if self.index == 12 {
                         self.showTutorial.toggle()
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                             self.index += 1
                         }
-                    } else if self.index == 11 {
+                    } else if self.index == 14 {
                         self.showGameplay1.toggle()
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -43,7 +43,7 @@ struct StoryView: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                             self.index += 1
                         }
-                    } else if self.index == 1 {   // 13
+                    } else if self.index == 15 { //15
                         self.showGameplay3.toggle()
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {

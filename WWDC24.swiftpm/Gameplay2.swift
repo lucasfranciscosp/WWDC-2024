@@ -263,7 +263,7 @@ struct Gameplay2: View {
             
     func checkIfIsCorrect() {
         if actualNumeratorArray == finalNumeratorArray && actualDenominatorArray == finalDenominatorArray {
-            self.auxIndex += 1
+            self.auxIndex = textsWithColors.count - 1
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 showAnimationWarrior = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5) {

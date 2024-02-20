@@ -12,7 +12,7 @@ struct ContentView: View {
     @State private var correct: String = "green"
     @State private var wrong: String = "red"
     
-    @State private var initialBlueDicesQt = 5
+    @State private var initialBlueDicesQt = 6
     @State private var initialRedDicesQt = 6
     @State private var initialNumeratorQt  = 0
     @State private var initialDenominatorQt = 0
@@ -29,7 +29,7 @@ struct ContentView: View {
     @State var auxIndex: Int = 0
     
     let textsWithColors: [[Text]] = [[
-        Text("\(Text("We gonna use the").coloredText(.white)) \(Text("blue dices").coloredText(Color(hex: "0094FF"))) \(Text("to").coloredText(.white)) \(Text("put all the possibilities we want").coloredText(Color(hex: "0094FF"))) \(Text("in the").coloredText(.white)) \(Text("blue box").coloredText(Color(hex: "0094FF")))")
+        Text("\(Text("We gonna use the").coloredText(.white)) \(Text("blue dices").coloredText(Color(hex: "0094FF"))) \(Text("to").coloredText(.white)) \(Text("put all the \npossibilities we want").coloredText(Color(hex: "0094FF"))) \(Text("in the").coloredText(.white)) \(Text("blue box").coloredText(Color(hex: "0094FF")))")
     ],[
         Text("\(Text("And the").foregroundColor(.white)) \(Text("red dices").foregroundColor(Color(hex: "F03131"))) \(Text("to put").foregroundColor(.white)) \(Text("all the possibilities").foregroundColor(Color(hex: "F03131"))) \(Text("inside the").foregroundColor(.white)) \(Text("red box").foregroundColor(Color(hex: "F03131")))")
     ],[
@@ -150,14 +150,19 @@ struct ContentView: View {
                 .padding(.top)
             
                 ZStack {
-                    Image("dialogueboxmage")
-                            .resizable()
-                            .frame(width: 1234, height: 216)
-                            .aspectRatio(contentMode: .fit)
-                            .edgesIgnoringSafeArea(.all)
-                            .scaleEffect(0.92)
-
-                        Image("NormalMage")
+                        Image("dialogueboxmage")
+                                .resizable()
+                                .frame(width: 1234, height: 216)
+                                .aspectRatio(contentMode: .fit)
+                                .edgesIgnoringSafeArea(.all)
+                                .scaleEffect(0.92)
+                        
+                    Image("arrow")
+                        .offset(x: 520, y: 60)
+                        .opacity(auxIndex < 3 || auxIndex >= 5 ? 1.0 : 0.0)
+                        
+                    
+                        Image("magenormal")
                             .frame(width: 1366 - 125, height: 0)
                             .scaleEffect(0.25)
                             .offset(x: -400)
@@ -168,6 +173,7 @@ struct ContentView: View {
                                     .font(.custom("Breathe Fire III", size: 36))
                             }
                         }
+                    
 
 
                         .padding(.leading, 350)
@@ -179,7 +185,7 @@ struct ContentView: View {
                 .onTapGesture {
                     if self.auxIndex != textsWithColors.count - 1 && self.auxIndex != 3 && self.auxIndex != 4{
                         if self.auxIndex == 5 {
-                            self.showContent.toggle()
+                            showContent.toggle()
                         }
                         self.auxIndex += 1
                     }
