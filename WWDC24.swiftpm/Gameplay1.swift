@@ -77,6 +77,7 @@ struct Gameplay1: View {
                             ForEach(RedDices, id: \.self){ dice in
                                 Image(dice.imageName)
                                     .onTapGesture {
+                                        checkIfIsCorrect()
                                         withAnimation(Animation.spring(duration: 0.5)) {
                                             moveDice(from: dice, source: &RedDices, destination: &Denominator)
                                             
@@ -229,7 +230,7 @@ struct Gameplay1: View {
             self.auxIndex = textsWithColors.count - 1
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 showAnimationWarrior = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.75) {
                     showContent.toggle()
                 }
             }

@@ -57,7 +57,7 @@ struct Gameplay3: View {
                             ForEach(BlueDices, id: \.self){ dice in
                                 Image(dice.imageName)
                                     .onTapGesture {
-                                        //checkIfIsCorrect()
+                                        checkIfIsCorrect()
                                         withAnimation(Animation.spring(duration: 0.5)) {
                                             moveDice(from: dice, source: &BlueDices, destination: &Numerator)
                                         }
@@ -77,6 +77,7 @@ struct Gameplay3: View {
                             ForEach(RedDices, id: \.self){ dice in
                                 Image(dice.imageName)
                                     .onTapGesture {
+                                        checkIfIsCorrect()
                                         withAnimation(Animation.spring(duration: 0.5)) {
                                             moveDice(from: dice, source: &RedDices, destination: &Denominator)
                                             
