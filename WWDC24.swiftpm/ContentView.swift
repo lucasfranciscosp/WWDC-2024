@@ -29,12 +29,11 @@ struct ContentView: View {
     
     @State var auxIndex: Int = 0
     
-    let textsWithColors: [[Text]] = [[
-        Text("\(Text("I'm gonna throw a dice of").coloredText(.white)) \(Text("4 sides!").coloredText(Color(hex: "F03131")))")
+    let textsWithColors: [[Text]] = [
+        [
+        Text("\(Text("Tap the").foregroundColor(.white)) \(Text("numbers 1, 2, 3, 4").foregroundColor(Color(hex: "F03131"))) \(Text("since them represent").foregroundColor(.white)) \(Text("all the possibilities").foregroundColor(Color(hex: "F03131"))) \(Text("in a").foregroundColor(.white)) \(Text("four-sided dice!").foregroundColor(Color(hex: "F03131"))) \(Text("We can notice that the denominator increases for every possibility").foregroundColor(.white))")
     ],[
-        Text("\(Text("Tap the").foregroundColor(.white)) \(Text("numbers 1, 2, 3, 4").foregroundColor(Color(hex: "F03131"))) \(Text("since them represent").foregroundColor(.white)) \(Text("all the possibilities").foregroundColor(Color(hex: "F03131"))) \(Text("in a dice of").foregroundColor(.white)) \(Text("4 sides!").foregroundColor(Color(hex: "F03131"))) \(Text("We can notice that the denominator increases for every possibility").foregroundColor(.white))")
-    ],[
-        Text("\(Text("Great! Now, to use my skill I need to take").foregroundColor(.white)) \(Text("numbers greater than 2").foregroundColor(Color(hex: "0094FF"))) \(Text("on the same").foregroundColor(.white)) \(Text("4 sided dice!").foregroundColor(Color(hex: "F03131"))) \(Text("In this case tap the numbers").foregroundColor(.white)) \(Text("3 and 4").foregroundColor(Color(hex: "0094FF"))) \(Text("as the others blue dices are not favorable cases or possibilities").foregroundColor(.white))")
+        Text("\(Text("Great! Now, to use my skill I need to take").foregroundColor(.white)) \(Text("numbers greater than two").foregroundColor(Color(hex: "0094FF"))) \(Text("on the same").foregroundColor(.white)) \(Text("four-sided dice!").foregroundColor(Color(hex: "F03131"))) \(Text("In this case tap the numbers").foregroundColor(.white)) \(Text("3 and 4").foregroundColor(Color(hex: "0094FF"))) \(Text("as the others blue dices are not favorable cases or possibilities").foregroundColor(.white))")
     ], [
         Text("\(Text("Nice! Now I'll use my skill!").foregroundColor(.white))")
     ]
@@ -56,11 +55,11 @@ struct ContentView: View {
                     ZStack {
                         RoundedRectangle(cornerRadius: 12)
                             .frame(maxWidth: 70, maxHeight: 450)
-                            .foregroundColor(auxIndex < 2 ? Color.blue.opacity(0.5) : .blue)
+                            .foregroundColor(auxIndex < 1 ? Color.blue.opacity(0.0) : .blue)
                         VStack {
                             ForEach(BlueDices, id: \.self){ dice in
                                 Image(dice.imageName)
-                                    .opacity(auxIndex < 2 ? 0.5 : 1.0)
+                                    .opacity(auxIndex < 1 ? 0.0 : 1.0)
                                     .onTapGesture {
                                         // checkIfIsCorrect()
                                         withAnimation(Animation.spring(duration: 0.5)) {
@@ -68,7 +67,7 @@ struct ContentView: View {
                                         }
                                         checkIfIsCorrect()
                                     }
-                                    .disabled(auxIndex < 2)
+                                    .disabled(auxIndex < 1)
                             }
                         }
                         
@@ -78,11 +77,11 @@ struct ContentView: View {
                         
                         RoundedRectangle(cornerRadius: 12)
                             .frame(maxWidth: 70, maxHeight: 450)
-                            .foregroundColor(auxIndex < 1 ? Color.red.opacity(0.5) : .red)
+                            .foregroundColor(auxIndex < 0 ? Color.red.opacity(0.5) : .red)
                         VStack {
                             ForEach(RedDices, id: \.self){ dice in
                                 Image(dice.imageName)
-                                    .opacity(auxIndex < 1 ? 0.5 : 1.0)
+                                    .opacity(auxIndex < 0 ? 0.5 : 1.0)
                                     .onTapGesture {
                                         withAnimation(Animation.spring(duration: 0.5)) {
                                             moveDice(from: dice, source: &RedDices, destination: &Denominator)
@@ -90,7 +89,7 @@ struct ContentView: View {
                                         }
                                         checkIfIsCorrect()
                                     }
-                                    .disabled(auxIndex < 1)
+                                    .disabled(auxIndex < 0)
                             }
                         }
                     
@@ -98,15 +97,15 @@ struct ContentView: View {
                     VStack() {
 
                         BoardView(title: "Numerator", tasks: Numerator, backgroundColor: .blue)
-                            .opacity(auxIndex < 2 ? 0.5 : 1.0)
+                            .opacity(auxIndex < 1 ? 0.0 : 1.0)
                         BoardView(title: "Denominator", tasks: Denominator, backgroundColor: .red)
-                            .opacity(auxIndex < 1 ? 0.5 : 1.0)
+                            .opacity(auxIndex < 0 ? 0.5 : 1.0)
                         
                     }
                     VStack {
                         HStack (spacing: 20) {
                             Image("equal")
-                                .opacity(auxIndex < 1 ? 0.5 : 1.0)
+                                .opacity(auxIndex < 0 ? 0.5 : 1.0)
                             VStack(spacing: 50) {
                                 if actualNumeratorArray == finalNumeratorArray {
                                     Image(systemName: "checkmark")
@@ -114,18 +113,18 @@ struct ContentView: View {
                                         .foregroundColor(.green)
                                 } else {
                                     Image(systemName: "xmark")
-                                        .font(.system(size: 36))
+                                        .font(.system(size: 32))
                                         .foregroundColor(.red)
-                                        .opacity(auxIndex < 2 ? 0.5 : 1.0)
+                                        .opacity(auxIndex < 1 ? 0.0 : 1.0)
                                 }
                                 Image("\(Numerator.count)blue")
-                                    .opacity(auxIndex < 2 ? 0.5 : 1.0)
+                                    .opacity(auxIndex < 1 ? 0.0 : 1.0)
                                 Image("linedivisor")
                                     .resizable()
                                     .frame(width: 129, height: 2)
-                                    .opacity(auxIndex < 1 ? 0.5 : 1.0)
+                                    .opacity(auxIndex < 0 ? 0.5 : 1.0)
                                 Image("\(Denominator.count)red")
-                                    .opacity(auxIndex < 1 ? 0.5 : 1.0)
+                                    .opacity(auxIndex < 0 ? 0.5 : 1.0)
                                 if actualDenominatorArray == finalDenominatorArray {
                                     Image(systemName: "checkmark")
                                         .font(.system(size: 32))
@@ -133,8 +132,8 @@ struct ContentView: View {
                                 } else {
                                     Image(systemName: "xmark")
                                         .foregroundColor(.red)
-                                        .font(.system(size: 36))
-                                        .opacity(auxIndex < 1 ? 0.5 : 1.0)
+                                        .font(.system(size: 32))
+                                        .opacity(auxIndex < 0 ? 0.5 : 1.0)
                                 }
                             }
                             .padding(.trailing)
@@ -159,7 +158,7 @@ struct ContentView: View {
                         
                     Image("arrow")
                         .offset(x: 520, y: 60)
-                        .opacity(auxIndex < 1 ? 1.0 : 0.0)
+                        .opacity(auxIndex < 0 ? 1.0 : 0.0)
                         
                         Image("bardnormal")
                             .frame(width: 1366 - 125, height: 0)
@@ -180,14 +179,6 @@ struct ContentView: View {
                         .offset(x: 50)
                     
                         
-                }
-                .onTapGesture {
-                    if self.auxIndex == 0 {
-                        self.auxIndex += 1
-                        print(self.auxIndex)
-                        print("estou debugando aqui")
-                    }
-                    
                 }
                 
             }
@@ -255,9 +246,9 @@ struct ContentView: View {
             
     func checkIfIsCorrect() {
         print(self.auxIndex, "estou checando")
-        if self.auxIndex == 1 && actualDenominatorArray == finalDenominatorArray{
+        if self.auxIndex == 0 && actualDenominatorArray == finalDenominatorArray{
             auxIndex += 1
-        } else if self.auxIndex == 2 && actualNumeratorArray == finalNumeratorArray{
+        } else if self.auxIndex == 1 && actualNumeratorArray == finalNumeratorArray{
             auxIndex += 1
             self.auxIndex = textsWithColors.count - 1
             print("deu certo denominador")

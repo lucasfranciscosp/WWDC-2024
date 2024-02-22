@@ -5,8 +5,9 @@ struct AnimationBard: View {
     @State private var currentFrameIndex = 0
     @State private var shadowX: CGFloat = 360
     @State private var shadowY = 565
-    let frameNames = ["gus1", "gus2", "gus2", "gus2", "gus3"]
+    let frameNames = ["gus1", "gus2", "gus2", "gus2", "gus3", "gus3"]
     var audioPlayers: [AVAudioPlayer] = []
+    @State var barked = false
     
     let audioURLs = [
         Bundle.main.url(forResource: "bark", withExtension: "mp3")
@@ -74,13 +75,14 @@ struct AnimationBard: View {
         // Animação usando um Timer
         Timer.scheduledTimer(withTimeInterval: 0.4, repeats: true) { timer in
             // Atualiza o índice do frame
-            if currentFrameIndex != 4 {
+            if currentFrameIndex == 5 {
+                audioPlayers[0].pause()
+            }else if !barked && currentFrameIndex != 4 {
                 currentFrameIndex = (currentFrameIndex + 1) % frameNames.count
-            } else {
+            } else if currentFrameIndex == 4 {
+                currentFrameIndex += 1
                 audioPlayers[0].play()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1){
-                    audioPlayers[0].pause()
-                }
+                self.barked = true
             }
             
         }

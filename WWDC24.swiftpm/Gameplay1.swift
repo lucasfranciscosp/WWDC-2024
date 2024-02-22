@@ -30,7 +30,7 @@ struct Gameplay1: View {
     @State var auxIndex: Int = 0
     
     let textsWithColors: [[Text]] = [[
-        Text("\(Text("To use my ability I have to take numbers").coloredText(.white)) \(Text("less than 3\n").coloredText(Color(hex: "0094FF"))) \(Text("in a dice of").coloredText(.white)) \(Text("6 sides").coloredText(Color(hex: "F03131")))")
+        Text("\(Text("To use my skill I'll roll a").coloredText(.white)) \(Text("six-sided").coloredText(Color(hex: "F03131"))) \(Text("dice and I want to take numbers").coloredText(.white)) \(Text("less than 3").coloredText(Color(hex: "0094FF")))")
     ],[
         Text("\(Text("Nice! The probability is correct!                                                                                        ").foregroundColor(.white))")
     ]
@@ -100,9 +100,11 @@ struct Gameplay1: View {
                             VStack(spacing: 50) {
                                 if actualNumeratorArray == finalNumeratorArray {
                                     Image(systemName: "checkmark")
+                                        .font(.system(size: 32))
                                         .foregroundColor(.green)
                                 } else {
                                     Image(systemName: "xmark")
+                                        .font(.system(size: 32))
                                         .foregroundColor(.red)
                                 }
                                 Image("\(Numerator.count)blue")
@@ -112,9 +114,11 @@ struct Gameplay1: View {
                                 Image("\(Denominator.count)red")
                                 if actualDenominatorArray == finalDenominatorArray {
                                     Image(systemName: "checkmark")
+                                        .font(.system(size: 32))
                                         .foregroundColor(.green)
                                 } else {
                                     Image(systemName: "xmark")
+                                        .font(.system(size: 32))
                                         .foregroundColor(.red)
                                 }
                             }

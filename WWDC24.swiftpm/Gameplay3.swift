@@ -13,7 +13,7 @@ struct Gameplay3: View {
     @State private var correct: String = "green"
     @State private var wrong: String = "red"
     
-    @State private var initialBlueDicesQt: [Int] = [1, 2, 8, 4, 7, 10]
+    @State private var initialBlueDicesQt: [Int] = [1, 2, 8, 4, 7, 3]
     @State private var initialRedDicesQt: [Int] = [1, 3, 6, 7, 8, 12]
     @State private var initialNumeratorQt  = 0
     @State private var initialDenominatorQt = 0
@@ -30,7 +30,7 @@ struct Gameplay3: View {
     @State var auxIndex: Int = 0
     
     let textsWithColors: [[Text]] = [[
-        Text("\(Text("To use my ability I have to take numbers").coloredText(.white)) \(Text("greater than 6").coloredText(Color(hex: "0094FF"))) \(Text("in a dice of").coloredText(.white)) \(Text("8 sides").coloredText(Color(hex: "F03131")))")
+        Text("\(Text("To use my skill I'll roll a").coloredText(.white)) \(Text("eight-sided").coloredText(Color(hex: "F03131"))) \(Text("dice and I want to take numbers").coloredText(.white)) \(Text("greater than 6").coloredText(Color(hex: "0094FF")))")
     ],[
         Text("\(Text("Thanks!                                                                                        ").foregroundColor(.white))")
     ]
@@ -137,9 +137,11 @@ struct Gameplay3: View {
                             VStack(spacing: 50) {
                                 if actualNumeratorArray == finalNumeratorArray {
                                     Image(systemName: "checkmark")
+                                        .font(.system(size: 32))
                                         .foregroundColor(.green)
                                 } else {
                                     Image(systemName: "xmark")
+                                        .font(.system(size: 32))
                                         .foregroundColor(.red)
                                 }
                                 Image("\(Numerator.count)blue")
@@ -149,9 +151,11 @@ struct Gameplay3: View {
                                 Image("\(Denominator.count)red")
                                 if actualDenominatorArray == finalDenominatorArray {
                                     Image(systemName: "checkmark")
+                                        .font(.system(size: 32))
                                         .foregroundColor(.green)
                                 } else {
                                     Image(systemName: "xmark")
+                                        .font(.system(size: 32))
                                         .foregroundColor(.red)
                                 }
                             }
