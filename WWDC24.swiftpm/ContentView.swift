@@ -293,8 +293,6 @@ struct ContentView: View {
                     
                     destination.append(removedDice)
                 }
-            } else {
-                
             }
         }
         
