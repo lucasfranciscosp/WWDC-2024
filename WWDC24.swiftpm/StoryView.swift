@@ -60,7 +60,7 @@ struct StoryView: View {
                 .onTapGesture {
                     print(audioURLs)
                     print(self.index, "meu índice de story é isso aqui")
-                    if self.index == 12 {
+                    if self.index == 12 { //12
                         self.showTutorial.toggle()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.index += 1

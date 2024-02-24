@@ -14,7 +14,7 @@ struct Gameplay3: View {
     @State private var wrong: String = "red"
     
     @State private var initialBlueDicesQt: [Int] = [1, 2, 8, 4, 7, 3]
-    @State private var initialRedDicesQt: [Int] = [1, 3, 6, 7, 8, 12]
+    @State private var initialRedDicesQt: [Int] = [1, 3, 6, 7, 8, 12, 2, 4, 5]
     @State private var initialNumeratorQt  = 0
     @State private var initialDenominatorQt = 0
     
@@ -22,7 +22,7 @@ struct Gameplay3: View {
     @State private var finalDenominator = 8
     
     @State private var actualNumeratorArray: [Int] = []
-    @State private var actualDenominatorArray: [Int] = [2, 4, 5]
+    @State private var actualDenominatorArray: [Int] = []
     
     @State private var finalNumeratorArray: [Int] = [7, 8]
     @State private var finalDenominatorArray: [Int] = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -30,7 +30,7 @@ struct Gameplay3: View {
     @State var auxIndex: Int = 0
     
     let textsWithColors: [[Text]] = [[
-        Text("\(Text("To use my skill I'll roll a").coloredText(.white)) \(Text("eight-sided").coloredText(Color(hex: "F03131"))) \(Text("dice and I want to take numbers").coloredText(.white)) \(Text("greater than 6").coloredText(Color(hex: "0094FF")))")
+        Text("\(Text("To use my skill I'll roll a").coloredText(.white)) \(Text("8-sided").coloredText(Color(hex: "F03131"))) \(Text("dice and I want to take numbers").coloredText(.white)) \(Text("greater than 6").coloredText(Color(hex: "0094FF")))")
     ],[
         Text("\(Text("Thanks!                                                                                        ").foregroundColor(.white))")
     ]
@@ -49,92 +49,89 @@ struct Gameplay3: View {
                 .padding(.bottom, 200)
             VStack {
                 HStack(spacing: 20) {
+                    
                     ZStack {
                         RoundedRectangle(cornerRadius: 12)
-                            .frame(maxWidth: 70, maxHeight: 450)
+                            .frame(maxHeight: 450)
+                            .frame(maxWidth: 350)
                             .foregroundColor(.blue)
-                        VStack {
-                            ForEach(BlueDices, id: \.self){ dice in
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(), count: 3), spacing: 12) {
+                            ForEach(BlueDices, id: \.self) { dice in
                                 Image(dice.imageName)
+                                    .frame(minWidth: 50, minHeight: 50)
                                     .onTapGesture {
                                         checkIfIsCorrect()
                                         withAnimation(Animation.spring(duration: 0.5)) {
                                             moveDice(from: dice, source: &BlueDices, destination: &Numerator)
-                                        }
-                                        checkIfIsCorrect()
-                                    }
-                            }
-                        }
-                        
-                    }
-                    .padding(.leading, 70)
-                    ZStack {
-                        
-                        RoundedRectangle(cornerRadius: 12)
-                            .frame(maxWidth: 70, maxHeight: 450)
-                            .foregroundColor(.red)
-                        VStack {
-                            ForEach(RedDices, id: \.self){ dice in
-                                Image(dice.imageName)
-                                    .onTapGesture {
-                                        checkIfIsCorrect()
-                                        withAnimation(Animation.spring(duration: 0.5)) {
-                                            moveDice(from: dice, source: &RedDices, destination: &Denominator)
                                             
                                         }
                                         checkIfIsCorrect()
                                     }
                             }
                         }
-                    
-                    }                    //DiceBoardView(tasks: RedDices, backgroundColor: .red)
-                    VStack() {
-
-                        VStack(alignment: .leading) {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 12)
-                                    .frame(maxHeight: 205)
-                                    .foregroundColor(.blue) // Using the specified background color
-                                
-                                LazyVGrid(columns: Array(repeating: GridItem(), count: 4), spacing: 12) {
-                                    ForEach(Numerator, id: \.self) { task in
-                                        Image(task.imageName)
-                                            .frame(minWidth: 50, minHeight: 50)
-                                            .foregroundStyle(.white)
-                                            .draggable(task.imageName)
-                                            .highPriorityGesture(DragGesture())
-                                    }
-                                }
-                                .padding(.vertical)
-                            }
-                            .padding(.vertical)
-                        }
-                        VStack(alignment: .leading) {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 12)
-                                    .frame(maxHeight: 205)
-                                    .foregroundColor(.red) // Using the specified background color
-                                
-                                LazyVGrid(columns: Array(repeating: GridItem(), count: 4), spacing: 12) {
-                                    ForEach(Denominator, id: \.self) { task in
-                                        Image(task.imageName)
-                                            .frame(minWidth: 50, minHeight: 50)
-                                            .foregroundStyle(.white)
-                                            .draggable(task.imageName)
-                                            .highPriorityGesture(DragGesture())
-                                    }
-                                }
-                                .padding(.vertical)
-                            }
-                            .padding(.vertical)
-                        }
-
-                        
+                        .frame(maxHeight: 450)
+                        .frame(maxWidth: 350)
+                        .padding(.vertical)
                     }
+                    
+//                    ZStack {
+//                        RoundedRectangle(cornerRadius: 12)
+//                            .frame(maxWidth: 70, maxHeight: 450)
+//                            .foregroundColor(auxIndex < 1 ? Color.blue.opacity(0.0) : .blue)
+//                        VStack {
+//                            ForEach(BlueDices, id: \.self){ dice in
+//                                Image(dice.imageName)
+//                                    .opacity(auxIndex < 1 ? 0.0 : 1.0)
+//                                    .onTapGesture {
+//                                        // checkIfIsCorrect()
+//                                        withAnimation(Animation.spring(duration: 0.5)) {
+//                                            moveDice(from: dice, source: &BlueDices, destination: &Numerator)
+//                                        }
+//                                        checkIfIsCorrect()
+//                                    }
+//                                    .disabled(auxIndex < 1)
+//                            }
+//                        }
+//
+//                    }
+//                    .padding(.leading, 70)
+//                    ZStack {
+//
+//                        RoundedRectangle(cornerRadius: 12)
+//                            .frame(maxWidth: 70, maxHeight: 450)
+//                            .foregroundColor(auxIndex < 0 ? Color.red.opacity(0.5) : .red)
+//                        VStack {
+//                            ForEach(RedDices, id: \.self){ dice in
+//                                Image(dice.imageName)
+//                                    .opacity(auxIndex < 0 ? 0.5 : 1.0)
+//                                    .onTapGesture {
+//                                        withAnimation(Animation.spring(duration: 0.5)) {
+//                                            moveDice(from: dice, source: &RedDices, destination: &Denominator)
+//
+//                                        }
+//                                        checkIfIsCorrect()
+//                                    }
+//                                    .disabled(auxIndex < 0)
+//                            }
+//                        }
+//
+//                    }
+                    
+                    //DiceBoardView(tasks: RedDices, backgroundColor: .red)
+//                    VStack() {
+//
+//                        BoardView(title: "Numerator", tasks: Numerator, backgroundColor: .blue)
+//                            .opacity(auxIndex < 1 ? 0.0 : 1.0)
+//                        BoardView(title: "Denominator", tasks: Denominator, backgroundColor: .red)
+//                            .opacity(auxIndex < 0 ? 0.5 : 1.0)
+//
+//                    }
                     VStack {
                         HStack (spacing: 20) {
-                            Image("equal")
-                            VStack(spacing: 50) {
+//                            Image("equal")
+//                                .opacity(auxIndex < 0 ? 0.5 : 1.0)
+                            VStack(spacing: 45) {
                                 if actualNumeratorArray == finalNumeratorArray {
                                     Image(systemName: "checkmark")
                                         .font(.system(size: 32))
@@ -149,24 +146,51 @@ struct Gameplay3: View {
                                     .resizable()
                                     .frame(width: 129, height: 2)
                                 Image("\(Denominator.count)red")
+                                    .opacity(auxIndex < 0 ? 0.5 : 1.0)
                                 if actualDenominatorArray == finalDenominatorArray {
                                     Image(systemName: "checkmark")
                                         .font(.system(size: 32))
                                         .foregroundColor(.green)
                                 } else {
                                     Image(systemName: "xmark")
-                                        .font(.system(size: 32))
                                         .foregroundColor(.red)
+                                        .font(.system(size: 32))
                                 }
                             }
-                            .padding(.trailing)
-                            .padding(.trailing)
+//                            .padding(.trailing)
+//                            .padding(.trailing)
                         }
                         
                         
                             
                     }
                     .padding(.trailing, 40)
+                    .padding(.leading, 40)
+                    
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .frame(maxHeight: 450)
+                            .frame(maxWidth: 350)
+                            .foregroundColor(.red) // Using the specified background color
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(), count: 3), spacing: 12) {
+                            ForEach(RedDices, id: \.self) { dice in
+                                Image(dice.imageName)
+                                    .frame(minWidth: 50, minHeight: 50)
+                                    .onTapGesture {
+                                        checkIfIsCorrect()
+                                        withAnimation(Animation.spring(duration: 0.5)) {
+                                            moveDice(from: dice, source: &RedDices, destination: &Denominator)
+                                            
+                                        }
+                                        checkIfIsCorrect()
+                                    }
+                            }
+                        }
+                        .frame(maxHeight: 450)
+                        .frame(maxWidth: 350)
+                        .padding(.vertical)
+                    }
                     
                 }
                 .padding(.top)
@@ -251,6 +275,9 @@ struct Gameplay3: View {
                         actualDenominatorArray.append(value)
                         actualDenominatorArray.sort()
                     }
+                    // Adicione uma imagem vazia no lugar do dado removido
+                    let emptyDice = Dice(image: [Image("empty")], imageName: "empty", value: 0, team: "empty")
+                    source.insert(emptyDice, at: index)
                     
                     destination.append(removedDice)
                 }

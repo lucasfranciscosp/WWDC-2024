@@ -33,7 +33,7 @@ struct ContentView: View {
         [
         Text("\(Text("Tap the").foregroundColor(.white)) \(Text("numbers 1, 2, 3, 4").foregroundColor(Color(hex: "F03131"))) \(Text("since them represent").foregroundColor(.white)) \(Text("all the possibilities").foregroundColor(Color(hex: "F03131"))) \(Text("in a").foregroundColor(.white)) \(Text("four-sided dice!").foregroundColor(Color(hex: "F03131"))) \(Text("We can notice that the denominator increases for every possibility").foregroundColor(.white))")
     ],[
-        Text("\(Text("Great! Now, to use my skill I need to take").foregroundColor(.white)) \(Text("numbers greater than two").foregroundColor(Color(hex: "0094FF"))) \(Text("on the same").foregroundColor(.white)) \(Text("four-sided dice!").foregroundColor(Color(hex: "F03131"))) \(Text("In this case tap the numbers").foregroundColor(.white)) \(Text("3 and 4").foregroundColor(Color(hex: "0094FF"))) \(Text("as the others blue dices are not favorable cases or possibilities").foregroundColor(.white))")
+        Text("\(Text("Great! Now, to use my skill I need to take").foregroundColor(.white)) \(Text("numbers greater than two").foregroundColor(Color(hex: "0094FF"))) \(Text("on the same").foregroundColor(.white)) \(Text("4-sided").foregroundColor(Color(hex: "F03131"))) \(Text(" dice!In this case tap the numbers").foregroundColor(.white)) \(Text("3 and 4").foregroundColor(Color(hex: "0094FF"))) \(Text("as the others blue dices are not favorable cases or possibilities").foregroundColor(.white))")
     ], [
         Text("\(Text("Nice! Now I'll use my skill!").foregroundColor(.white))")
     ]
@@ -51,62 +51,91 @@ struct ContentView: View {
                 .frame(width: 1135, height: 500)
                 .padding(.bottom, 200)
             VStack {
-                HStack(spacing: 20) {
+                HStack(spacing: 70) {
+                    
                     ZStack {
                         RoundedRectangle(cornerRadius: 12)
-                            .frame(maxWidth: 70, maxHeight: 450)
-                            .foregroundColor(auxIndex < 1 ? Color.blue.opacity(0.0) : .blue)
-                        VStack {
-                            ForEach(BlueDices, id: \.self){ dice in
+                            .frame(maxHeight: 450)
+                            .frame(maxWidth: 350)
+                            .foregroundColor(auxIndex < 1 ? Color.blue.opacity(0.0) : .blue) // Using the specified background color
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(), count: 3), spacing: 12) {
+                            ForEach(BlueDices, id: \.self) { dice in
                                 Image(dice.imageName)
+                                    .frame(minWidth: 50, minHeight: 50)
                                     .opacity(auxIndex < 1 ? 0.0 : 1.0)
                                     .onTapGesture {
-                                        // checkIfIsCorrect()
                                         withAnimation(Animation.spring(duration: 0.5)) {
                                             moveDice(from: dice, source: &BlueDices, destination: &Numerator)
+                                            
                                         }
                                         checkIfIsCorrect()
                                     }
                                     .disabled(auxIndex < 1)
                             }
                         }
-                        
+                        .frame(maxHeight: 450)
+                        .frame(maxWidth: 350)
+                        .padding(.vertical)
                     }
-                    .padding(.leading, 70)
-                    ZStack {
-                        
-                        RoundedRectangle(cornerRadius: 12)
-                            .frame(maxWidth: 70, maxHeight: 450)
-                            .foregroundColor(auxIndex < 0 ? Color.red.opacity(0.5) : .red)
-                        VStack {
-                            ForEach(RedDices, id: \.self){ dice in
-                                Image(dice.imageName)
-                                    .opacity(auxIndex < 0 ? 0.5 : 1.0)
-                                    .onTapGesture {
-                                        withAnimation(Animation.spring(duration: 0.5)) {
-                                            moveDice(from: dice, source: &RedDices, destination: &Denominator)
-                                            
-                                        }
-                                        checkIfIsCorrect()
-                                    }
-                                    .disabled(auxIndex < 0)
-                            }
-                        }
                     
-                    }                    //DiceBoardView(tasks: RedDices, backgroundColor: .red)
-                    VStack() {
-
-                        BoardView(title: "Numerator", tasks: Numerator, backgroundColor: .blue)
-                            .opacity(auxIndex < 1 ? 0.0 : 1.0)
-                        BoardView(title: "Denominator", tasks: Denominator, backgroundColor: .red)
-                            .opacity(auxIndex < 0 ? 0.5 : 1.0)
-                        
-                    }
+//                    ZStack {
+//                        RoundedRectangle(cornerRadius: 12)
+//                            .frame(maxWidth: 70, maxHeight: 450)
+//                            .foregroundColor(auxIndex < 1 ? Color.blue.opacity(0.0) : .blue)
+//                        VStack {
+//                            ForEach(BlueDices, id: \.self){ dice in
+//                                Image(dice.imageName)
+//                                    .opacity(auxIndex < 1 ? 0.0 : 1.0)
+//                                    .onTapGesture {
+//                                        // checkIfIsCorrect()
+//                                        withAnimation(Animation.spring(duration: 0.5)) {
+//                                            moveDice(from: dice, source: &BlueDices, destination: &Numerator)
+//                                        }
+//                                        checkIfIsCorrect()
+//                                    }
+//                                    .disabled(auxIndex < 1)
+//                            }
+//                        }
+//                        
+//                    }
+//                    .padding(.leading, 70)
+//                    ZStack {
+//                        
+//                        RoundedRectangle(cornerRadius: 12)
+//                            .frame(maxWidth: 70, maxHeight: 450)
+//                            .foregroundColor(auxIndex < 0 ? Color.red.opacity(0.5) : .red)
+//                        VStack {
+//                            ForEach(RedDices, id: \.self){ dice in
+//                                Image(dice.imageName)
+//                                    .opacity(auxIndex < 0 ? 0.5 : 1.0)
+//                                    .onTapGesture {
+//                                        withAnimation(Animation.spring(duration: 0.5)) {
+//                                            moveDice(from: dice, source: &RedDices, destination: &Denominator)
+//                                            
+//                                        }
+//                                        checkIfIsCorrect()
+//                                    }
+//                                    .disabled(auxIndex < 0)
+//                            }
+//                        }
+//                    
+//                    }
+                    
+                    //DiceBoardView(tasks: RedDices, backgroundColor: .red)
+//                    VStack() {
+//
+//                        BoardView(title: "Numerator", tasks: Numerator, backgroundColor: .blue)
+//                            .opacity(auxIndex < 1 ? 0.0 : 1.0)
+//                        BoardView(title: "Denominator", tasks: Denominator, backgroundColor: .red)
+//                            .opacity(auxIndex < 0 ? 0.5 : 1.0)
+//                        
+//                    }
                     VStack {
                         HStack (spacing: 20) {
-                            Image("equal")
-                                .opacity(auxIndex < 0 ? 0.5 : 1.0)
-                            VStack(spacing: 50) {
+//                            Image("equal")
+//                                .opacity(auxIndex < 0 ? 0.5 : 1.0)
+                            VStack(spacing: 45) {
                                 if actualNumeratorArray == finalNumeratorArray {
                                     Image(systemName: "checkmark")
                                         .font(.system(size: 32))
@@ -136,14 +165,41 @@ struct ContentView: View {
                                         .opacity(auxIndex < 0 ? 0.5 : 1.0)
                                 }
                             }
-                            .padding(.trailing)
-                            .padding(.trailing)
+//                            .padding(.trailing)
+//                            .padding(.trailing)
                         }
                         
                         
                             
                     }
                     .padding(.trailing, 40)
+                    .padding(.leading, 40)
+                    
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .frame(maxHeight: 450)
+                            .frame(maxWidth: 350)
+                            .foregroundColor(.red) // Using the specified background color
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(), count: 3), spacing: 12) {
+                            ForEach(RedDices, id: \.self) { dice in
+                                Image(dice.imageName)
+                                    .frame(minWidth: 50, minHeight: 50)
+                                    .opacity(auxIndex < 0 ? 0.5 : 1.0)
+                                    .onTapGesture {
+                                        withAnimation(Animation.spring(duration: 0.5)) {
+                                            moveDice(from: dice, source: &RedDices, destination: &Denominator)
+                                            
+                                        }
+                                        checkIfIsCorrect()
+                                    }
+                                    .disabled(auxIndex < 0)
+                            }
+                        }
+                        .frame(maxHeight: 450)
+                        .frame(maxWidth: 350)
+                        .padding(.vertical)
+                    }
                     
                 }
                 .padding(.top)
@@ -231,9 +287,14 @@ struct ContentView: View {
                         actualDenominatorArray.append(value)
                         actualDenominatorArray.sort()
                     }
+                    // Adicione uma imagem vazia no lugar do dado removido
+                    let emptyDice = Dice(image: [Image("empty")], imageName: "empty", value: 0, team: "empty")
+                    source.insert(emptyDice, at: index)
                     
                     destination.append(removedDice)
                 }
+            } else {
+                
             }
         }
         

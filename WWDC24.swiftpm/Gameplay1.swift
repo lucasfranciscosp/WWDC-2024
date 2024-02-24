@@ -30,7 +30,7 @@ struct Gameplay1: View {
     @State var auxIndex: Int = 0
     
     let textsWithColors: [[Text]] = [[
-        Text("\(Text("To use my skill I'll roll a").coloredText(.white)) \(Text("six-sided").coloredText(Color(hex: "F03131"))) \(Text("dice and I want to take numbers").coloredText(.white)) \(Text("less than 3").coloredText(Color(hex: "0094FF")))")
+        Text("\(Text("To use my skill I'll roll a").coloredText(.white)) \(Text("6-sided").coloredText(Color(hex: "F03131"))) \(Text("dice and I want to take numbers").coloredText(.white)) \(Text("less than 3").coloredText(Color(hex: "0094FF")))")
     ],[
         Text("\(Text("Nice! The probability is correct!                                                                                        ").foregroundColor(.white))")
     ]
@@ -49,55 +49,89 @@ struct Gameplay1: View {
                 .padding(.bottom, 200)
             VStack {
                 HStack(spacing: 20) {
+                    
                     ZStack {
                         RoundedRectangle(cornerRadius: 12)
-                            .frame(maxWidth: 70, maxHeight: 450)
+                            .frame(maxHeight: 450)
+                            .frame(maxWidth: 350)
                             .foregroundColor(.blue)
-                        VStack {
-                            ForEach(BlueDices, id: \.self){ dice in
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(), count: 3), spacing: 12) {
+                            ForEach(BlueDices, id: \.self) { dice in
                                 Image(dice.imageName)
+                                    .frame(minWidth: 50, minHeight: 50)
                                     .onTapGesture {
                                         checkIfIsCorrect()
                                         withAnimation(Animation.spring(duration: 0.5)) {
                                             moveDice(from: dice, source: &BlueDices, destination: &Numerator)
-                                        }
-                                        checkIfIsCorrect()
-                                    }
-                            }
-                        }
-                        
-                    }
-                    .padding(.leading, 70)
-                    ZStack {
-                        
-                        RoundedRectangle(cornerRadius: 12)
-                            .frame(maxWidth: 70, maxHeight: 450)
-                            .foregroundColor(.red)
-                        VStack {
-                            ForEach(RedDices, id: \.self){ dice in
-                                Image(dice.imageName)
-                                    .onTapGesture {
-                                        checkIfIsCorrect()
-                                        withAnimation(Animation.spring(duration: 0.5)) {
-                                            moveDice(from: dice, source: &RedDices, destination: &Denominator)
                                             
                                         }
                                         checkIfIsCorrect()
                                     }
                             }
                         }
-                    
-                    }                    //DiceBoardView(tasks: RedDices, backgroundColor: .red)
-                    VStack() {
-
-                        BoardView(title: "Numerator", tasks: Numerator, backgroundColor: .blue)
-                        BoardView(title: "Denominator", tasks: Denominator, backgroundColor: .red)
-                        
+                        .frame(maxHeight: 450)
+                        .frame(maxWidth: 350)
+                        .padding(.vertical)
                     }
+                    
+//                    ZStack {
+//                        RoundedRectangle(cornerRadius: 12)
+//                            .frame(maxWidth: 70, maxHeight: 450)
+//                            .foregroundColor(auxIndex < 1 ? Color.blue.opacity(0.0) : .blue)
+//                        VStack {
+//                            ForEach(BlueDices, id: \.self){ dice in
+//                                Image(dice.imageName)
+//                                    .opacity(auxIndex < 1 ? 0.0 : 1.0)
+//                                    .onTapGesture {
+//                                        // checkIfIsCorrect()
+//                                        withAnimation(Animation.spring(duration: 0.5)) {
+//                                            moveDice(from: dice, source: &BlueDices, destination: &Numerator)
+//                                        }
+//                                        checkIfIsCorrect()
+//                                    }
+//                                    .disabled(auxIndex < 1)
+//                            }
+//                        }
+//
+//                    }
+//                    .padding(.leading, 70)
+//                    ZStack {
+//
+//                        RoundedRectangle(cornerRadius: 12)
+//                            .frame(maxWidth: 70, maxHeight: 450)
+//                            .foregroundColor(auxIndex < 0 ? Color.red.opacity(0.5) : .red)
+//                        VStack {
+//                            ForEach(RedDices, id: \.self){ dice in
+//                                Image(dice.imageName)
+//                                    .opacity(auxIndex < 0 ? 0.5 : 1.0)
+//                                    .onTapGesture {
+//                                        withAnimation(Animation.spring(duration: 0.5)) {
+//                                            moveDice(from: dice, source: &RedDices, destination: &Denominator)
+//
+//                                        }
+//                                        checkIfIsCorrect()
+//                                    }
+//                                    .disabled(auxIndex < 0)
+//                            }
+//                        }
+//
+//                    }
+                    
+                    //DiceBoardView(tasks: RedDices, backgroundColor: .red)
+//                    VStack() {
+//
+//                        BoardView(title: "Numerator", tasks: Numerator, backgroundColor: .blue)
+//                            .opacity(auxIndex < 1 ? 0.0 : 1.0)
+//                        BoardView(title: "Denominator", tasks: Denominator, backgroundColor: .red)
+//                            .opacity(auxIndex < 0 ? 0.5 : 1.0)
+//
+//                    }
                     VStack {
                         HStack (spacing: 20) {
-                            Image("equal")
-                            VStack(spacing: 50) {
+//                            Image("equal")
+//                                .opacity(auxIndex < 0 ? 0.5 : 1.0)
+                            VStack(spacing: 45) {
                                 if actualNumeratorArray == finalNumeratorArray {
                                     Image(systemName: "checkmark")
                                         .font(.system(size: 32))
@@ -112,24 +146,51 @@ struct Gameplay1: View {
                                     .resizable()
                                     .frame(width: 129, height: 2)
                                 Image("\(Denominator.count)red")
+                                    .opacity(auxIndex < 0 ? 0.5 : 1.0)
                                 if actualDenominatorArray == finalDenominatorArray {
                                     Image(systemName: "checkmark")
                                         .font(.system(size: 32))
                                         .foregroundColor(.green)
                                 } else {
                                     Image(systemName: "xmark")
-                                        .font(.system(size: 32))
                                         .foregroundColor(.red)
+                                        .font(.system(size: 32))
                                 }
                             }
-                            .padding(.trailing)
-                            .padding(.trailing)
+//                            .padding(.trailing)
+//                            .padding(.trailing)
                         }
                         
                         
                             
                     }
                     .padding(.trailing, 40)
+                    .padding(.leading, 40)
+                    
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .frame(maxHeight: 450)
+                            .frame(maxWidth: 350)
+                            .foregroundColor(.red) // Using the specified background color
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(), count: 3), spacing: 12) {
+                            ForEach(RedDices, id: \.self) { dice in
+                                Image(dice.imageName)
+                                    .frame(minWidth: 50, minHeight: 50)
+                                    .onTapGesture {
+                                        checkIfIsCorrect()
+                                        withAnimation(Animation.spring(duration: 0.5)) {
+                                            moveDice(from: dice, source: &RedDices, destination: &Denominator)
+                                            
+                                        }
+                                        checkIfIsCorrect()
+                                    }
+                            }
+                        }
+                        .frame(maxHeight: 450)
+                        .frame(maxWidth: 350)
+                        .padding(.vertical)
+                    }
                     
                 }
                 .padding(.top)
@@ -215,6 +276,9 @@ struct Gameplay1: View {
                         actualDenominatorArray.append(value)
                         actualDenominatorArray.sort()
                     }
+                    // Adicione uma imagem vazia no lugar do dado removido
+                    let emptyDice = Dice(image: [Image("empty")], imageName: "empty", value: 0, team: "empty")
+                    source.insert(emptyDice, at: index)
                     
                     destination.append(removedDice)
                 }
