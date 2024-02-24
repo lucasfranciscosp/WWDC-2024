@@ -28,10 +28,13 @@ struct Gameplay1: View {
     @State private var finalDenominatorArray: [Int] = [1, 2, 3, 4, 5, 6]
     
     @State var auxIndex: Int = 0
+    @State var face = "warriornormal"
     
-    let textsWithColors: [[Text]] = [[
+    @State var textsWithColors: [[Text]] = [[
         Text("\(Text("To use my skill I'll roll a").coloredText(.white)) \(Text("6-sided").coloredText(Color(hex: "F03131"))) \(Text("dice and I want to take numbers").coloredText(.white)) \(Text("less than 3").coloredText(Color(hex: "0094FF")))")
     ],[
+        Text("\(Text("Nice! The probability is correct!                                                                                        ").foregroundColor(.white))")
+    ], [
         Text("\(Text("Nice! The probability is correct!                                                                                        ").foregroundColor(.white))")
     ]
     ]
@@ -203,7 +206,7 @@ struct Gameplay1: View {
                             .edgesIgnoringSafeArea(.all)
                             .scaleEffect(0.92)
 
-                        Image("warriornormal")
+                        Image(face)
                             .frame(width: 1366 - 125, height: 0)
                             .scaleEffect(0.25)
                             .offset(x: -400)
@@ -255,12 +258,41 @@ struct Gameplay1: View {
             if removedDice.imageName.contains("blue") {
                 if finalNumeratorArray.contains(value) {
                     isAllowedToMove = true
+                    checkIfIsCorrect()
+                } else {
+                    if dice.value < finalNumeratorArray[0] {
+                        textsWithColors[textsWithColors.count - 1] = [Text("\(Text("The number").foregroundColor(.white)) \(Text("\(dice.value)").foregroundColor(Color(hex: "0094FF"))) \(Text("it's not what a favorable case").foregroundColor(.white))")]
+                        auxIndex = 2
+                        face = "warriorsad"
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            face = "warriornormal"
+                            auxIndex = 0
+                        }
+                    } else {
+                        textsWithColors[textsWithColors.count - 1] = [Text("\(Text("The number").foregroundColor(.white)) \(Text("\(dice.value)").foregroundColor(Color(hex: "0094FF"))) \(Text("it's not possible to take in a").foregroundColor(.white)) \(Text("6-sided dice!").foregroundColor(Color(hex: "F03131")))")]
+                        auxIndex = 2
+                        face = "warriorsad"
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            face = "warriornormal"
+                            auxIndex = 0
+                        }
+                    }
                 }
             }
             // Se for vermelho, verifique se o valor existe no final do denominador
             else {
                 if finalDenominatorArray.contains(value) {
                     isAllowedToMove = true
+                    checkIfIsCorrect()
+                } else {
+                    textsWithColors[textsWithColors.count - 1] = [Text("\(Text("The number").foregroundColor(.white)) \(Text("\(dice.value)").foregroundColor(Color(hex: "F03131"))) \(Text("it's not a possibility in a").foregroundColor(.white)) \(Text("6-sided dice").foregroundColor(Color(hex: "F03131")))")]
+                    auxIndex = 2
+                    face = "warriorsad"
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        face = "warriornormal"
+                        auxIndex = 0
+                    }
+                    
                 }
             }
             
@@ -283,9 +315,8 @@ struct Gameplay1: View {
                     destination.append(removedDice)
                 }
             }
-            
         }
-            
+        
     }
 
     

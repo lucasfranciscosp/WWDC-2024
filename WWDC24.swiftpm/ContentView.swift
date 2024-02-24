@@ -28,15 +28,24 @@ struct ContentView: View {
     @State private var finalDenominatorArray: [Int] = [1, 2, 3, 4]
     
     @State var auxIndex: Int = 0
+    @State var befIndex: Int = 0
     
-    let textsWithColors: [[Text]] = [
+    @State var face = "bardnormal"
+    
+    @State var denominatorDone = false
+    @State var waiting: Bool = false
+    
+    @State var textsWithColors: [[Text]] = [
         [
-        Text("\(Text("Tap the").foregroundColor(.white)) \(Text("numbers 1, 2, 3, 4").foregroundColor(Color(hex: "F03131"))) \(Text("since them represent").foregroundColor(.white)) \(Text("all the possibilities").foregroundColor(Color(hex: "F03131"))) \(Text("in a").foregroundColor(.white)) \(Text("four-sided dice!").foregroundColor(Color(hex: "F03131"))) \(Text("We can notice that the denominator increases for every possibility").foregroundColor(.white))")
+        Text("\(Text("Tap the").foregroundColor(.white)) \(Text("numbers 1, 2, 3, 4").foregroundColor(Color(hex: "F03131"))) \(Text("since them represent").foregroundColor(.white)) \(Text("all the possibilities").foregroundColor(Color(hex: "F03131"))) \(Text("in a").foregroundColor(.white)) \(Text("4-sided dice!").foregroundColor(Color(hex: "F03131"))) \(Text("We can notice that the denominator increases for every possibility").foregroundColor(.white))")
     ],[
         Text("\(Text("Great! Now, to use my skill I need to take").foregroundColor(.white)) \(Text("numbers greater than two").foregroundColor(Color(hex: "0094FF"))) \(Text("on the same").foregroundColor(.white)) \(Text("4-sided").foregroundColor(Color(hex: "F03131"))) \(Text(" dice!In this case tap the numbers").foregroundColor(.white)) \(Text("3 and 4").foregroundColor(Color(hex: "0094FF"))) \(Text("as the others blue dices are not favorable cases or possibilities").foregroundColor(.white))")
     ], [
         Text("\(Text("Nice! Now I'll use my skill!").foregroundColor(.white))")
-    ]
+    ],
+        [
+        Text("\(Text("Nice! Now I'll use my skill!").foregroundColor(.white))")
+        ]
     ]
 
     
@@ -57,19 +66,21 @@ struct ContentView: View {
                         RoundedRectangle(cornerRadius: 12)
                             .frame(maxHeight: 450)
                             .frame(maxWidth: 350)
-                            .foregroundColor(auxIndex < 1 ? Color.blue.opacity(0.0) : .blue) // Using the specified background color
+                            .foregroundColor(auxIndex < 1 || !denominatorDone ? Color.blue.opacity(0.0) : .blue) // Using the specified background color
                         
                         LazyVGrid(columns: Array(repeating: GridItem(), count: 3), spacing: 12) {
                             ForEach(BlueDices, id: \.self) { dice in
                                 Image(dice.imageName)
                                     .frame(minWidth: 50, minHeight: 50)
-                                    .opacity(auxIndex < 1 ? 0.0 : 1.0)
+                                    .opacity(auxIndex < 1 || !denominatorDone ? 0.0 : 1.0)
                                     .onTapGesture {
-                                        withAnimation(Animation.spring(duration: 0.5)) {
-                                            moveDice(from: dice, source: &BlueDices, destination: &Numerator)
-                                            
+                                        if !waiting {
+                                            withAnimation(Animation.spring(duration: 0.5)) {
+                                                moveDice(from: dice, source: &BlueDices, destination: &Numerator)
+                                                
+                                            }
+                                            checkIfIsCorrect()
                                         }
-                                        checkIfIsCorrect()
                                     }
                                     .disabled(auxIndex < 1)
                             }
@@ -82,11 +93,11 @@ struct ContentView: View {
 //                    ZStack {
 //                        RoundedRectangle(cornerRadius: 12)
 //                            .frame(maxWidth: 70, maxHeight: 450)
-//                            .foregroundColor(auxIndex < 1 ? Color.blue.opacity(0.0) : .blue)
+//                            .foregroundColor(auxIndex < 1 || !denominatorDone ? Color.blue.opacity(0.0) : .blue)
 //                        VStack {
 //                            ForEach(BlueDices, id: \.self){ dice in
 //                                Image(dice.imageName)
-//                                    .opacity(auxIndex < 1 ? 0.0 : 1.0)
+//                                    .opacity(auxIndex < 1 || !denominatorDone ? 0.0 : 1.0)
 //                                    .onTapGesture {
 //                                        // checkIfIsCorrect()
 //                                        withAnimation(Animation.spring(duration: 0.5)) {
@@ -94,7 +105,7 @@ struct ContentView: View {
 //                                        }
 //                                        checkIfIsCorrect()
 //                                    }
-//                                    .disabled(auxIndex < 1)
+//                                    .disabled(auxIndex < 1 || !denominatorDone)
 //                            }
 //                        }
 //                        
@@ -126,7 +137,7 @@ struct ContentView: View {
 //                    VStack() {
 //
 //                        BoardView(title: "Numerator", tasks: Numerator, backgroundColor: .blue)
-//                            .opacity(auxIndex < 1 ? 0.0 : 1.0)
+//                            .opacity(auxIndex < 1 || !denominatorDone ? 0.0 : 1.0)
 //                        BoardView(title: "Denominator", tasks: Denominator, backgroundColor: .red)
 //                            .opacity(auxIndex < 0 ? 0.5 : 1.0)
 //                        
@@ -144,10 +155,10 @@ struct ContentView: View {
                                     Image(systemName: "xmark")
                                         .font(.system(size: 32))
                                         .foregroundColor(.red)
-                                        .opacity(auxIndex < 1 ? 0.0 : 1.0)
+                                        .opacity(auxIndex < 1 || !denominatorDone ? 0.0 : 1.0)
                                 }
                                 Image("\(Numerator.count)blue")
-                                    .opacity(auxIndex < 1 ? 0.0 : 1.0)
+                                    .opacity(auxIndex < 1 || !denominatorDone ? 0.0 : 1.0)
                                 Image("linedivisor")
                                     .resizable()
                                     .frame(width: 129, height: 2)
@@ -187,11 +198,14 @@ struct ContentView: View {
                                     .frame(minWidth: 50, minHeight: 50)
                                     .opacity(auxIndex < 0 ? 0.5 : 1.0)
                                     .onTapGesture {
-                                        withAnimation(Animation.spring(duration: 0.5)) {
-                                            moveDice(from: dice, source: &RedDices, destination: &Denominator)
+                                        if !waiting {
                                             
+                                            withAnimation(Animation.spring(duration: 0.5)) {
+                                                moveDice(from: dice, source: &RedDices, destination: &Denominator)
+                                                
+                                            }
+                                            checkIfIsCorrect()
                                         }
-                                        checkIfIsCorrect()
                                     }
                                     .disabled(auxIndex < 0)
                             }
@@ -216,7 +230,7 @@ struct ContentView: View {
                         .offset(x: 520, y: 60)
                         .opacity(auxIndex < 0 ? 1.0 : 0.0)
                         
-                        Image("bardnormal")
+                        Image(face)
                             .frame(width: 1366 - 125, height: 0)
                             //.scaleEffect(0.25)
                             .offset(x: -400)
@@ -261,17 +275,52 @@ struct ContentView: View {
             let value = removedDice.value
             
             var isAllowedToMove = false
+            print("to apertando azul")
             
             // Se for azul, verifique se o valor existe no numerador
             if removedDice.imageName.contains("blue") {
+                
                 if finalNumeratorArray.contains(value) {
                     isAllowedToMove = true
+                } else {
+                    if dice.value < finalNumeratorArray[0] {
+                        textsWithColors[textsWithColors.count - 1] = [Text("\(Text("The number").foregroundColor(.white)) \(Text("\(dice.value)").foregroundColor(Color(hex: "0094FF"))) \(Text("it's not what a favorable case").foregroundColor(.white))")]
+                        auxIndex = 3
+                        face = "bardsad"
+                        waiting = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            face = "bardnormal"
+                            auxIndex = 1
+                            waiting = false
+                        }
+                    } else {
+                        textsWithColors[textsWithColors.count - 1] = [Text("\(Text("The number").foregroundColor(.white)) \(Text("\(dice.value)").foregroundColor(Color(hex: "0094FF"))) \(Text("it's not possible to take in a\n ").foregroundColor(.white)) \(Text("4-sided dice!").foregroundColor(Color(hex: "F03131")))")]
+                        auxIndex = 3
+                        face = "bardsad"
+                        waiting = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            face = "bardnormal"
+                            auxIndex = 1
+                            waiting = false
+                        }
+                    }
                 }
             }
             // Se for vermelho, verifique se o valor existe no final do denominador
             else {
                 if finalDenominatorArray.contains(value) {
                     isAllowedToMove = true
+                } else {
+                    textsWithColors[textsWithColors.count - 1] = [Text("\(Text("The number").foregroundColor(.white)) \(Text("\(dice.value)").foregroundColor(Color(hex: "F03131"))) \(Text("it's not a possibility in a").foregroundColor(.white)) \(Text("4-sided dice").foregroundColor(Color(hex: "F03131")))")]
+                    auxIndex = 3
+                    face = "bardsad"
+                    waiting = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        face = "bardnormal"
+                        auxIndex = 0
+                        waiting = false
+                    }
+                    
                 }
             }
             
@@ -307,9 +356,11 @@ struct ContentView: View {
         print(self.auxIndex, "estou checando")
         if self.auxIndex == 0 && actualDenominatorArray == finalDenominatorArray{
             auxIndex += 1
+            denominatorDone = true
+            waiting = false
         } else if self.auxIndex == 1 && actualNumeratorArray == finalNumeratorArray{
             auxIndex += 1
-            self.auxIndex = textsWithColors.count - 1
+            self.auxIndex = textsWithColors.count - 2
             print("deu certo denominador")
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 showAnimationWarrior = true
