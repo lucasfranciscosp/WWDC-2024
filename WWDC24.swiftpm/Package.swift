@@ -8,19 +8,19 @@ import PackageDescription
 import AppleProductTypes
 
 let package = Package(
-    name: "WWDC24",
+    name: "Probability Quest",
     platforms: [
         .iOS("16.0")
     ],
     products: [
         .iOSApplication(
-            name: "WWDC24",
+            name: "Probability Quest",
             targets: ["AppModule"],
             bundleIdentifier: "com.lucasfrancisco.WWDC24",
             teamIdentifier: "Q7Z5S76S2J",
             displayVersion: "1.0",
             bundleVersion: "1",
-            appIcon: .placeholder(icon: .cloud),
+            appIcon: .asset("AppIcon"),
             accentColor: .presetColor(.yellow),
             supportedDeviceFamilies: [
                 .pad
@@ -32,15 +32,9 @@ let package = Package(
             appCategory: .puzzleGames
         )
     ],
-    dependencies: [
-        .package(url: "https://github.com/apple/swift-algorithms.git", "1.2.0"..<"2.0.0")
-    ],
     targets: [
         .executableTarget(
             name: "AppModule",
-            dependencies: [
-                .product(name: "Algorithms", package: "swift-algorithms")
-            ],
             path: ".",
             resources: [
                 .process("Resources")
