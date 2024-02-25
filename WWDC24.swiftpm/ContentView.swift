@@ -37,7 +37,7 @@ struct ContentView: View {
     
     @State var textsWithColors: [[Text]] = [
         [
-        Text("\(Text("Tap the").foregroundColor(.white)) \(Text("numbers 1, 2, 3, 4").foregroundColor(Color(hex: "F03131"))) \(Text("since them represent").foregroundColor(.white)) \(Text("all the possibilities").foregroundColor(Color(hex: "F03131"))) \(Text("in a").foregroundColor(.white)) \(Text("4-sided dice!").foregroundColor(Color(hex: "F03131"))) \(Text("We can notice that the denominator increases for every possibility").foregroundColor(.white))")
+        Text("\(Text("Tap the").foregroundColor(.white)) \(Text("numbers 1, 2, 3, 4").foregroundColor(Color(hex: "F03131"))) \(Text("since they represent").foregroundColor(.white)) \(Text("all the possibilities").foregroundColor(Color(hex: "F03131"))) \(Text("in a").foregroundColor(.white)) \(Text("4-sided dice!").foregroundColor(Color(hex: "F03131"))) \(Text("We can notice that the denominator increases for every possibility").foregroundColor(.white))")
     ],[
         Text("\(Text("Great! Now, to use my skill I need to take").foregroundColor(.white)) \(Text("numbers greater than two").foregroundColor(Color(hex: "0094FF"))) \(Text("on the same").foregroundColor(.white)) \(Text("4-sided").foregroundColor(Color(hex: "F03131"))) \(Text(" dice!In this case tap the numbers").foregroundColor(.white)) \(Text("3 and 4").foregroundColor(Color(hex: "0094FF"))) \(Text("as the others blue dices are not favorable cases or possibilities").foregroundColor(.white))")
     ], [
