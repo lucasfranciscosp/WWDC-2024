@@ -7,6 +7,7 @@ struct StoryView: View {
     @State private var showGameplay1: Bool = false
     @State private var showGameplay2: Bool = false
     @State private var showGameplay3: Bool = false
+    @State private var showFinish: Bool = false
 
     var audioPlayers: [AVAudioPlayer] = []
     
@@ -80,7 +81,10 @@ struct StoryView: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.index += 1
                         }
-                    }  else {
+                    }  else if self.index == 21 {
+                        audioPlayers[1].pause()
+                        self.showFinish.toggle()
+                    }   else {
                         if self.index == 5 {
                             audioPlayers[0].pause()
                             audioPlayers[1].play()
@@ -102,6 +106,9 @@ struct StoryView: View {
         }
         .fullScreenCover(isPresented: $showGameplay3) {
             Gameplay3(showContent: $showGameplay3)
+        }
+        .fullScreenCover(isPresented: $showFinish) {
+            FinishView()
         }
         .transaction({ transaction in
             transaction.disablesAnimations = true

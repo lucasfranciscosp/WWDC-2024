@@ -82,7 +82,7 @@ struct ContentView: View {
                                             checkIfIsCorrect()
                                         }
                                     }
-                                    .disabled(auxIndex < 1)
+                                    .disabled(auxIndex < 1 || waiting || (finalNumeratorArray == actualNumeratorArray && finalDenominatorArray == actualDenominatorArray))
                             }
                         }
                         .frame(maxHeight: 450)
@@ -207,7 +207,7 @@ struct ContentView: View {
                                             checkIfIsCorrect()
                                         }
                                     }
-                                    .disabled(auxIndex < 0)
+                                    .disabled(auxIndex < 0 || finalDenominatorArray == actualDenominatorArray)
                             }
                         }
                         .frame(maxHeight: 450)

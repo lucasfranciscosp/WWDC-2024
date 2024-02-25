@@ -28,10 +28,14 @@ struct Gameplay3: View {
     @State private var finalDenominatorArray: [Int] = [1, 2, 3, 4, 5, 6, 7, 8]
     
     @State var auxIndex: Int = 0
+    @State var face = "archernormal"
+    @State var waiting: Bool = false
     
-    let textsWithColors: [[Text]] = [[
+    @State var textsWithColors: [[Text]] = [[
         Text("\(Text("To use my skill I'll roll a").coloredText(.white)) \(Text("8-sided").coloredText(Color(hex: "F03131"))) \(Text("dice and I want to take numbers").coloredText(.white)) \(Text("greater than 6").coloredText(Color(hex: "0094FF")))")
     ],[
+        Text("\(Text("Thanks!                                                                                        ").foregroundColor(.white))")
+    ], [
         Text("\(Text("Thanks!                                                                                        ").foregroundColor(.white))")
     ]
     ]
@@ -61,13 +65,15 @@ struct Gameplay3: View {
                                 Image(dice.imageName)
                                     .frame(minWidth: 50, minHeight: 50)
                                     .onTapGesture {
-                                        checkIfIsCorrect()
-                                        withAnimation(Animation.spring(duration: 0.5)) {
-                                            moveDice(from: dice, source: &BlueDices, destination: &Numerator)
-                                            
+                                        if !waiting {
+                                            checkIfIsCorrect()
+                                            withAnimation(Animation.spring(duration: 0.5)) {
+                                                moveDice(from: dice, source: &BlueDices, destination: &Numerator)
+                                            }
+                                            checkIfIsCorrect()
                                         }
-                                        checkIfIsCorrect()
                                     }
+                                    .disabled((finalNumeratorArray == actualNumeratorArray && finalDenominatorArray == actualDenominatorArray))
                             }
                         }
                         .frame(maxHeight: 450)
@@ -178,13 +184,15 @@ struct Gameplay3: View {
                                 Image(dice.imageName)
                                     .frame(minWidth: 50, minHeight: 50)
                                     .onTapGesture {
-                                        checkIfIsCorrect()
-                                        withAnimation(Animation.spring(duration: 0.5)) {
-                                            moveDice(from: dice, source: &RedDices, destination: &Denominator)
-                                            
+                                        if !waiting {
+                                            checkIfIsCorrect()
+                                            withAnimation(Animation.spring(duration: 0.5)) {
+                                                moveDice(from: dice, source: &RedDices, destination: &Denominator)
+                                            }
+                                            checkIfIsCorrect()
                                         }
-                                        checkIfIsCorrect()
                                     }
+                                    .disabled((finalNumeratorArray == actualNumeratorArray && finalDenominatorArray == actualDenominatorArray))
                             }
                         }
                         .frame(maxHeight: 450)
@@ -203,7 +211,7 @@ struct Gameplay3: View {
                             .edgesIgnoringSafeArea(.all)
                             .scaleEffect(0.92)
 
-                        Image("archernormal")
+                        Image(face)
                             .frame(width: 1366 - 125, height: 0)
                             .offset(x: -400)
                     
@@ -254,12 +262,47 @@ struct Gameplay3: View {
             if removedDice.imageName.contains("blue") {
                 if finalNumeratorArray.contains(value) {
                     isAllowedToMove = true
+                    checkIfIsCorrect()
+                } else {
+                    if dice.value < 9 {
+                        textsWithColors[textsWithColors.count - 1] = [Text("\(Text("The number").foregroundColor(.white)) \(Text("\(dice.value)").foregroundColor(Color(hex: "0094FF"))) \(Text("it's not what a favorable case").foregroundColor(.white))")]
+                        auxIndex = 2
+                        face = "archersad"
+                        waiting = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            face = "archernormal"
+                            auxIndex = 0
+                            waiting = false
+                        }
+                    } else {
+                        textsWithColors[textsWithColors.count - 1] = [Text("\(Text("The number").foregroundColor(.white)) \(Text("\(dice.value)").foregroundColor(Color(hex: "0094FF"))) \(Text("it's not possible to take in a").foregroundColor(.white)) \(Text("8-sided dice!").foregroundColor(Color(hex: "F03131")))")]
+                        auxIndex = 2
+                        face = "archersad"
+                        waiting = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            face = "archernormal"
+                            auxIndex = 0
+                            waiting = false
+                        }
+                    }
                 }
             }
             // Se for vermelho, verifique se o valor existe no final do denominador
             else {
                 if finalDenominatorArray.contains(value) {
                     isAllowedToMove = true
+                    checkIfIsCorrect()
+                } else {
+                    textsWithColors[textsWithColors.count - 1] = [Text("\(Text("The number").foregroundColor(.white)) \(Text("\(dice.value)").foregroundColor(Color(hex: "F03131"))) \(Text("it's not a possibility in a").foregroundColor(.white)) \(Text("8-sided dice").foregroundColor(Color(hex: "F03131")))")]
+                    auxIndex = 2
+                    face = "archersad"
+                    waiting = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        waiting = false
+                        face = "archernormal"
+                        auxIndex = 0
+                    }
+                    
                 }
             }
             
@@ -282,9 +325,8 @@ struct Gameplay3: View {
                     destination.append(removedDice)
                 }
             }
-            
         }
-            
+        
     }
 
     
@@ -294,7 +336,7 @@ struct Gameplay3: View {
             
     func checkIfIsCorrect() {
         if actualNumeratorArray == finalNumeratorArray && actualDenominatorArray == finalDenominatorArray {
-            self.auxIndex = textsWithColors.count - 1
+            self.auxIndex = textsWithColors.count - 2
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 showAnimationWarrior = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {

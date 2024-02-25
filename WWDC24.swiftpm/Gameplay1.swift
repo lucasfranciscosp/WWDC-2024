@@ -29,6 +29,7 @@ struct Gameplay1: View {
     
     @State var auxIndex: Int = 0
     @State var face = "warriornormal"
+    @State var waiting: Bool = false
     
     @State var textsWithColors: [[Text]] = [[
         Text("\(Text("To use my skill I'll roll a").coloredText(.white)) \(Text("6-sided").coloredText(Color(hex: "F03131"))) \(Text("dice and I want to take numbers").coloredText(.white)) \(Text("less than 3").coloredText(Color(hex: "0094FF")))")
@@ -64,13 +65,16 @@ struct Gameplay1: View {
                                 Image(dice.imageName)
                                     .frame(minWidth: 50, minHeight: 50)
                                     .onTapGesture {
-                                        checkIfIsCorrect()
-                                        withAnimation(Animation.spring(duration: 0.5)) {
-                                            moveDice(from: dice, source: &BlueDices, destination: &Numerator)
-                                            
+                                        if !waiting {
+                                            checkIfIsCorrect()
+                                            withAnimation(Animation.spring(duration: 0.5)) {
+                                                moveDice(from: dice, source: &BlueDices, destination: &Numerator)
+                                                
+                                            }
+                                            checkIfIsCorrect()
                                         }
-                                        checkIfIsCorrect()
                                     }
+                                    .disabled((finalNumeratorArray == actualNumeratorArray && finalDenominatorArray == actualDenominatorArray))
                             }
                         }
                         .frame(maxHeight: 450)
@@ -181,13 +185,16 @@ struct Gameplay1: View {
                                 Image(dice.imageName)
                                     .frame(minWidth: 50, minHeight: 50)
                                     .onTapGesture {
-                                        checkIfIsCorrect()
-                                        withAnimation(Animation.spring(duration: 0.5)) {
-                                            moveDice(from: dice, source: &RedDices, destination: &Denominator)
-                                            
+                                        if !waiting {
+                                            checkIfIsCorrect()
+                                            withAnimation(Animation.spring(duration: 0.5)) {
+                                                moveDice(from: dice, source: &RedDices, destination: &Denominator)
+                                                
+                                            }
+                                            checkIfIsCorrect()
                                         }
-                                        checkIfIsCorrect()
                                     }
+                                    .disabled((finalNumeratorArray == actualNumeratorArray && finalDenominatorArray == actualDenominatorArray))
                             }
                         }
                         .frame(maxHeight: 450)
@@ -260,21 +267,25 @@ struct Gameplay1: View {
                     isAllowedToMove = true
                     checkIfIsCorrect()
                 } else {
-                    if dice.value < finalNumeratorArray[0] {
+                    if dice.value < 7 {
                         textsWithColors[textsWithColors.count - 1] = [Text("\(Text("The number").foregroundColor(.white)) \(Text("\(dice.value)").foregroundColor(Color(hex: "0094FF"))) \(Text("it's not what a favorable case").foregroundColor(.white))")]
                         auxIndex = 2
                         face = "warriorsad"
+                        waiting = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                             face = "warriornormal"
                             auxIndex = 0
+                            waiting = false
                         }
                     } else {
                         textsWithColors[textsWithColors.count - 1] = [Text("\(Text("The number").foregroundColor(.white)) \(Text("\(dice.value)").foregroundColor(Color(hex: "0094FF"))) \(Text("it's not possible to take in a").foregroundColor(.white)) \(Text("6-sided dice!").foregroundColor(Color(hex: "F03131")))")]
                         auxIndex = 2
                         face = "warriorsad"
+                        waiting = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                             face = "warriornormal"
                             auxIndex = 0
+                            waiting = false
                         }
                     }
                 }
@@ -288,7 +299,9 @@ struct Gameplay1: View {
                     textsWithColors[textsWithColors.count - 1] = [Text("\(Text("The number").foregroundColor(.white)) \(Text("\(dice.value)").foregroundColor(Color(hex: "F03131"))) \(Text("it's not a possibility in a").foregroundColor(.white)) \(Text("6-sided dice").foregroundColor(Color(hex: "F03131")))")]
                     auxIndex = 2
                     face = "warriorsad"
+                    waiting = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        waiting = false
                         face = "warriornormal"
                         auxIndex = 0
                     }
@@ -326,7 +339,7 @@ struct Gameplay1: View {
             
     func checkIfIsCorrect() {
         if actualNumeratorArray == finalNumeratorArray && actualDenominatorArray == finalDenominatorArray {
-            self.auxIndex = textsWithColors.count - 1
+            self.auxIndex = textsWithColors.count - 2
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 showAnimationWarrior = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.75) {
